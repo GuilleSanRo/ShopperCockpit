@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ReadMeRouteImport } from './routes/read-me'
+import { Route as OldLinksRouteImport } from './routes/old-links'
+import { Route as MacroToLocationRouteImport } from './routes/macro-to-location'
+import { Route as CheckingComRouteImport } from './routes/checking-com'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ReadMeRoute = ReadMeRouteImport.update({
+  id: '/read-me',
+  path: '/read-me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OldLinksRoute = OldLinksRouteImport.update({
+  id: '/old-links',
+  path: '/old-links',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MacroToLocationRoute = MacroToLocationRouteImport.update({
+  id: '/macro-to-location',
+  path: '/macro-to-location',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckingComRoute = CheckingComRouteImport.update({
+  id: '/checking-com',
+  path: '/checking-com',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,83 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/checking-com': typeof CheckingComRoute
+  '/macro-to-location': typeof MacroToLocationRoute
+  '/old-links': typeof OldLinksRoute
+  '/read-me': typeof ReadMeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/checking-com': typeof CheckingComRoute
+  '/macro-to-location': typeof MacroToLocationRoute
+  '/old-links': typeof OldLinksRoute
+  '/read-me': typeof ReadMeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/checking-com': typeof CheckingComRoute
+  '/macro-to-location': typeof MacroToLocationRoute
+  '/old-links': typeof OldLinksRoute
+  '/read-me': typeof ReadMeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/checking-com'
+    | '/macro-to-location'
+    | '/old-links'
+    | '/read-me'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/checking-com' | '/macro-to-location' | '/old-links' | '/read-me'
+  id:
+    | '__root__'
+    | '/'
+    | '/checking-com'
+    | '/macro-to-location'
+    | '/old-links'
+    | '/read-me'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CheckingComRoute: typeof CheckingComRoute
+  MacroToLocationRoute: typeof MacroToLocationRoute
+  OldLinksRoute: typeof OldLinksRoute
+  ReadMeRoute: typeof ReadMeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/read-me': {
+      id: '/read-me'
+      path: '/read-me'
+      fullPath: '/read-me'
+      preLoaderRoute: typeof ReadMeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/old-links': {
+      id: '/old-links'
+      path: '/old-links'
+      fullPath: '/old-links'
+      preLoaderRoute: typeof OldLinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/macro-to-location': {
+      id: '/macro-to-location'
+      path: '/macro-to-location'
+      fullPath: '/macro-to-location'
+      preLoaderRoute: typeof MacroToLocationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checking-com': {
+      id: '/checking-com'
+      path: '/checking-com'
+      fullPath: '/checking-com'
+      preLoaderRoute: typeof CheckingComRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +132,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CheckingComRoute: CheckingComRoute,
+  MacroToLocationRoute: MacroToLocationRoute,
+  OldLinksRoute: OldLinksRoute,
+  ReadMeRoute: ReadMeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
