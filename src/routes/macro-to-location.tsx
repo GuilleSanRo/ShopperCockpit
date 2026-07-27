@@ -22,7 +22,7 @@ export const Route = createFileRoute("/macro-to-location")({
       },
     ],
   }),
-  component: MacroToLocation;
+  component: MacroToLocation,
 });
 
 const MONTHS = [
