@@ -60,6 +60,20 @@ export async function processMacroToLocation({
 
   const ws = wb.worksheets[0];
 
+  // Flatten all formula cells to their static values to prevent ExcelJS from
+  // throwing shared formula master/clone errors and having broken references
+  // when rows are deleted or duplicated.
+  ws.eachRow((row) => {
+    row.eachCell((cell) => {
+      if (cell.type === ExcelJS.ValueType.Formula) {
+        const val = cell.value;
+        if (val && typeof val === "object" && "result" in val) {
+          cell.value = val.result !== undefined && val.result !== null ? val.result : null;
+        }
+      }
+    });
+  });
+
   // Delete all other sheets
   for (const other of [...wb.worksheets]) {
     if (other.id !== ws.id) wb.removeWorksheet(other.id);
