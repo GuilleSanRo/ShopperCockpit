@@ -50,7 +50,7 @@ export const dashboardCards: DashboardCard[] = [
   },
   {
     id: "macro-to-location",
-    title: "MACRO TO LOCATION",
+    title: "MATRIX TO LOCATION",
     description:
       "Generate the Location in Excel by uploading a Matrix file and selecting month/year.",
     Icon: MacroToLocationIcon,

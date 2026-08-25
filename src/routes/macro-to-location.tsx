@@ -10,12 +10,12 @@ import { downloadBlob, stripExt, validateExcelFile } from "@/lib/excel/download"
 export const Route = createFileRoute("/macro-to-location")({
   head: () => ({
     meta: [
-      { title: "Macro to Location — Shopper Cockpit" },
+      { title: "Matrix to Location — Shopper Cockpit" },
       {
         name: "description",
         content: "Upload a Matrix Excel file and download the generated Location file.",
       },
-      { property: "og:title", content: "Macro to Location — Shopper Cockpit" },
+      { property: "og:title", content: "Matrix to Location — Shopper Cockpit" },
       {
         property: "og:description",
         content: "Upload a Matrix Excel file and download the generated Location file.",
@@ -98,7 +98,7 @@ function MacroToLocation() {
 
   return (
     <PageShell
-      title="Macro to Location"
+      title="Matrix to Location"
       subtitle="Upload a Matrix Excel file, choose month and year, then download the generated Location file."
     >
       <form onSubmit={onSubmit} className="space-y-6">

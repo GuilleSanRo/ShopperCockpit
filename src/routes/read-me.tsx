@@ -21,7 +21,7 @@ const sections = [
   { title: "360 Navigator", body: "Opens the client platform in a new tab." },
   { title: "LCV Graphs", body: "Opens one client dashboard in a new tab." },
   {
-    title: "Macro to Location",
+    title: "Matrix to Location",
     body: "Upload Matrix, choose month/year, download Location file.",
   },
   { title: "From Pricer to Matrix", body: "Opens the existing MatchWheels app." },
