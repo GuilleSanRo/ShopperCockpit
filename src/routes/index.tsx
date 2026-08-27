@@ -28,11 +28,7 @@ function Dashboard() {
       <Header />
       <main
         className="grid gap-px border-t border-b"
-        style={{
-          borderColor: "#E1E4EE",
-          backgroundColor: "#E1E4EE",
-          gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
-        }}
+        style={{ overflow: "hidden" }}
       >
         <div className="contents md:hidden">
           {dashboardCards.map((c) => (
