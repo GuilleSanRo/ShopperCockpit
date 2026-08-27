@@ -35,7 +35,7 @@ export function DashboardCardTile({ card }: Props) {
       onClick={activate}
       onKeyDown={onKey}
       aria-label={`${card.title}. ${card.description}`}
-      className="group cursor-pointer border transition-all duration-[250ms] ease-out outline-none focus-visible:ring-2"
+      overflow: "hidden",
       style={{
         backgroundColor: "var(--surface)",
         borderColor: "#E1E4EE",
