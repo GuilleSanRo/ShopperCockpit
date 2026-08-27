@@ -84,7 +84,11 @@ function MacroToLocation() {
         month,
         year,
       });
-      const filename = `Location_${stripExt(file.name)}_${month}.xlsx`;
+      let baseName = stripExt(file.name);
+      if (baseName.toUpperCase().startsWith("MATRIZ_")) {
+        baseName = baseName.substring(7);
+      }
+      const filename = `Location_${baseName}_${month}.xlsx`;
       setOutput({ bytes: outputBytes, filename });
       setStatus("success");
       trackEvent("macro_processing_success", { fileName: file.name });
