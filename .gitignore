@@ -30,3 +30,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.vercel
+.tanstack
+.wrangler
+package-lock.json
