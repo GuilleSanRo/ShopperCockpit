@@ -23,11 +23,11 @@ export function Header() {
           Read Me
         </Link>
         <Link
-          to="/old-links"
+          to="/other-links"
           className="hover:text-[color:var(--accent-blue)] transition-colors"
           activeProps={{ style: { color: "var(--accent-blue)" } }}
         >
-          Old Links
+          Other Links
         </Link>
         <div
           className="flex flex-col items-center text-[10px] tracking-wider text-muted-foreground"
