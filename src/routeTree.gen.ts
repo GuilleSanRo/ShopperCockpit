@@ -9,19 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as CheckingComRouteImport } from './routes/checking-com'
-import { Route as MacroToLocationRouteImport } from './routes/macro-to-location'
 import { Route as ReadMeRouteImport } from './routes/read-me'
+import { Route as OtherLinksRouteImport } from './routes/other-links'
+import { Route as OldLinksRouteImport } from './routes/old-links'
+import { Route as MacroToLocationRouteImport } from './routes/macro-to-location'
+import { Route as CheckingComRouteImport } from './routes/checking-com'
+import { Route as IndexRouteImport } from './routes/index'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ReadMeRoute = ReadMeRouteImport.update({
+  id: '/read-me',
+  path: '/read-me',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CheckingComRoute = CheckingComRouteImport.update({
-  id: '/checking-com',
-  path: '/checking-com',
+const OtherLinksRoute = OtherLinksRouteImport.update({
+  id: '/other-links',
+  path: '/other-links',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OldLinksRoute = OldLinksRouteImport.update({
+  id: '/old-links',
+  path: '/old-links',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MacroToLocationRoute = MacroToLocationRouteImport.update({
@@ -29,9 +36,14 @@ const MacroToLocationRoute = MacroToLocationRouteImport.update({
   path: '/macro-to-location',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ReadMeRoute = ReadMeRouteImport.update({
-  id: '/read-me',
-  path: '/read-me',
+const CheckingComRoute = CheckingComRouteImport.update({
+  id: '/checking-com',
+  path: '/checking-com',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -39,12 +51,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/checking-com': typeof CheckingComRoute
   '/macro-to-location': typeof MacroToLocationRoute
+  '/old-links': typeof OldLinksRoute
+  '/other-links': typeof OtherLinksRoute
   '/read-me': typeof ReadMeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/checking-com': typeof CheckingComRoute
   '/macro-to-location': typeof MacroToLocationRoute
+  '/old-links': typeof OldLinksRoute
+  '/other-links': typeof OtherLinksRoute
   '/read-me': typeof ReadMeRoute
 }
 export interface FileRoutesById {
@@ -52,37 +68,67 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/checking-com': typeof CheckingComRoute
   '/macro-to-location': typeof MacroToLocationRoute
+  '/old-links': typeof OldLinksRoute
+  '/other-links': typeof OtherLinksRoute
   '/read-me': typeof ReadMeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/checking-com' | '/macro-to-location' | '/read-me'
+  fullPaths:
+    | '/'
+    | '/checking-com'
+    | '/macro-to-location'
+    | '/old-links'
+    | '/other-links'
+    | '/read-me'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/checking-com' | '/macro-to-location' | '/read-me'
-  id: '__root__' | '/' | '/checking-com' | '/macro-to-location' | '/read-me'
+  to:
+    | '/'
+    | '/checking-com'
+    | '/macro-to-location'
+    | '/old-links'
+    | '/other-links'
+    | '/read-me'
+  id:
+    | '__root__'
+    | '/'
+    | '/checking-com'
+    | '/macro-to-location'
+    | '/old-links'
+    | '/other-links'
+    | '/read-me'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CheckingComRoute: typeof CheckingComRoute
   MacroToLocationRoute: typeof MacroToLocationRoute
+  OldLinksRoute: typeof OldLinksRoute
+  OtherLinksRoute: typeof OtherLinksRoute
   ReadMeRoute: typeof ReadMeRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/read-me': {
+      id: '/read-me'
+      path: '/read-me'
+      fullPath: '/read-me'
+      preLoaderRoute: typeof ReadMeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/checking-com': {
-      id: '/checking-com'
-      path: '/checking-com'
-      fullPath: '/checking-com'
-      preLoaderRoute: typeof CheckingComRouteImport
+    '/other-links': {
+      id: '/other-links'
+      path: '/other-links'
+      fullPath: '/other-links'
+      preLoaderRoute: typeof OtherLinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/old-links': {
+      id: '/old-links'
+      path: '/old-links'
+      fullPath: '/old-links'
+      preLoaderRoute: typeof OldLinksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/macro-to-location': {
@@ -92,11 +138,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MacroToLocationRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/read-me': {
-      id: '/read-me'
-      path: '/read-me'
-      fullPath: '/read-me'
-      preLoaderRoute: typeof ReadMeRouteImport
+    '/checking-com': {
+      id: '/checking-com'
+      path: '/checking-com'
+      fullPath: '/checking-com'
+      preLoaderRoute: typeof CheckingComRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -106,6 +159,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CheckingComRoute: CheckingComRoute,
   MacroToLocationRoute: MacroToLocationRoute,
+  OldLinksRoute: OldLinksRoute,
+  OtherLinksRoute: OtherLinksRoute,
   ReadMeRoute: ReadMeRoute,
 }
 export const routeTree = rootRouteImport
