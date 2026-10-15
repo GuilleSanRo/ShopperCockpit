@@ -46,6 +46,65 @@ function getCellNumber(v: unknown): number {
   return isNaN(n) ? 0 : n;
 }
 
+interface CellSnapshot {
+  col: number;
+  value: ExcelJS.CellValue;
+  style?: Partial<ExcelJS.Style>;
+}
+
+interface RowSnapshot {
+  cells: CellSnapshot[];
+  height?: number;
+}
+
+function snapshotRow(ws: ExcelJS.Worksheet, r: number, maxCol: number): RowSnapshot {
+  const row = ws.getRow(r);
+  const cells: CellSnapshot[] = [];
+  for (let c = 1; c <= maxCol; c++) {
+    const cell = row.getCell(c);
+    cells.push({
+      col: c,
+      value: cell.value,
+      style: cell.style ? { ...cell.style } : undefined,
+    });
+  }
+  return {
+    cells,
+    height: row.height,
+  };
+}
+
+function restoreRow(ws: ExcelJS.Worksheet, r: number, snap: RowSnapshot) {
+  const row = ws.getRow(r);
+  if (snap.height !== undefined) row.height = snap.height;
+  for (const c of snap.cells) {
+    const cell = row.getCell(c.col);
+    cell.value = c.value;
+    if (c.style && Object.keys(c.style).length > 0) {
+      cell.style = c.style;
+    }
+  }
+}
+
+function getRowCellValue(row: RowSnapshot, colNumber: number): unknown {
+  return row.cells.find((c) => c.col === colNumber)?.value;
+}
+
+function compareCellValues(a: unknown, b: unknown): number {
+  const sa = getCellText(a).trim();
+  const sb = getCellText(b).trim();
+  if (sa === "" && sb === "") return 0;
+  if (sa === "") return 1;
+  if (sb === "") return -1;
+
+  const na = Number(sa);
+  const nb = Number(sb);
+  if (!isNaN(na) && !isNaN(nb)) {
+    return na - nb;
+  }
+  return sa.localeCompare(sb, undefined, { numeric: true, sensitivity: "base" });
+}
+
 export async function processMacroToLocation({
   fileBytes,
   month,
@@ -257,22 +316,44 @@ export async function processMacroToLocation({
   const isLcv = LCV_COUNTRIES.has(paisCompleto);
 
   if (esOverseas || isLcv) {
-    // Fill BQ (69), BS (71), BT (72), and UAE price update
-    // Note: after deletion of CL, columns shifted. CJ=88, CK=89, CF=84, but we work with original mapping.
-    // Post-deletion of col 90, "CK" (col 89 originally) is now at col 89 still (we deleted col 90).
+    const maxCol = Math.max(ws.columnCount, 89);
+    let lastDataRow = 2;
+    while (getCellText(ws.getCell(lastDataRow, ubiIni - 1).value) !== "") {
+      lastDataRow++;
+    }
+    const totalDataRows = lastDataRow - 2;
+
+    // 1. Initial sort by regions (column 89 / CK) ascending
+    if (totalDataRows > 1) {
+      const rows: RowSnapshot[] = [];
+      for (let r = 2; r < lastDataRow; r++) {
+        rows.push(snapshotRow(ws, r, maxCol));
+      }
+      rows.sort((r1, r2) => {
+        return compareCellValues(getRowCellValue(r1, 89), getRowCellValue(r2, 89));
+      });
+      for (let idx = 0; idx < rows.length; idx++) {
+        restoreRow(ws, idx + 2, rows[idx]);
+      }
+    }
+
+    // 2. Fill BQ (69), BS (71), BT (72), and UAE price update
+    // Note: post-deletion of col 90, "CK" (col 89 originally) is now at col 89.
     // Ranges: BQ=69, BS=71, BT=72, CJ=88, CK=89, CF=84, J=10, AI=35, AF=32
     x = 2;
     while (getCellText(ws.getCell(x, ubiIni - 1).value) !== "") {
-      if (esOverseas && getCellText(ws.getCell(x, 88).value) !== "") {
-        ws.getCell(x, 69).value = getCellText(ws.getCell(x, 1).value);
-      } else {
-        ws.getCell(x, 69).value = getCellText(ws.getCell(x - 1, 69).value);
-      }
-
-      if (isLcv && getCellText(ws.getCell(x, 84).value) !== "") {
-        ws.getCell(x, 69).value = getCellText(ws.getCell(x, 1).value);
+      if (esOverseas) {
+        if (getCellText(ws.getCell(x, 88).value) !== "") {
+          ws.getCell(x, 69).value = getCellText(ws.getCell(x, 1).value);
+        } else {
+          ws.getCell(x, 69).value = getCellText(ws.getCell(x - 1, 69).value);
+        }
       } else if (isLcv) {
-        ws.getCell(x, 69).value = getCellText(ws.getCell(x - 1, 69).value);
+        if (getCellText(ws.getCell(x, 84).value) !== "") {
+          ws.getCell(x, 69).value = getCellText(ws.getCell(x, 1).value);
+        } else {
+          ws.getCell(x, 69).value = getCellText(ws.getCell(x - 1, 69).value);
+        }
       }
 
       if (esOverseas) {
@@ -302,6 +383,34 @@ export async function processMacroToLocation({
         if (aiVal > 0) ws.getCell(x, 32).value = aiVal;
       }
       x++;
+    }
+
+    // 3. Final Double-Criteria Sort:
+    // If BQ has data, sort primarily by BQ and secondarily by CK.
+    // Otherwise, sort by A.
+    if (totalDataRows > 1) {
+      const rows: RowSnapshot[] = [];
+      for (let r = 2; r < lastDataRow; r++) {
+        rows.push(snapshotRow(ws, r, maxCol));
+      }
+
+      const hasBqData = rows.some((r) => getCellText(getRowCellValue(r, 69)).trim() !== "");
+
+      if (hasBqData) {
+        rows.sort((r1, r2) => {
+          const cmpBq = compareCellValues(getRowCellValue(r1, 69), getRowCellValue(r2, 69));
+          if (cmpBq !== 0) return cmpBq;
+          return compareCellValues(getRowCellValue(r1, 89), getRowCellValue(r2, 89));
+        });
+      } else {
+        rows.sort((r1, r2) => {
+          return compareCellValues(getRowCellValue(r1, 1), getRowCellValue(r2, 1));
+        });
+      }
+
+      for (let idx = 0; idx < rows.length; idx++) {
+        restoreRow(ws, idx + 2, rows[idx]);
+      }
     }
   }
 
