@@ -58,24 +58,25 @@ export function LcvIcon(props: IconProps) {
 export function MacroToLocationIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>
-      {/* Excel spreadsheet icon */}
-      <rect x="8" y="22" width="22" height="28" rx="2" />
-      {/* Header bar */}
-      <rect x="8" y="22" width="22" height="7" rx="2" fill="#217346" stroke="#217346" />
-      <rect x="8" y="27" width="22" height="2" fill="#217346" stroke="#217346" />
-      {/* Grid lines */}
-      <line x1="8" y1="35" x2="30" y2="35" />
-      <line x1="8" y1="42" x2="30" y2="42" />
-      <line x1="19" y1="29" x2="19" y2="50" />
-      {/* Centered blue X mark */}
-      <path d="M15 32 L23 40 M23 32 L15 40" stroke={BLUE} strokeWidth="1.8" />
+      {/* Back document sheet */}
+      <path d="M19 23 L25 23 C26.1 23 27 23.9 27 25 L27 47 C27 48.1 26.1 49 25 49 L19 49" stroke="#10172A" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
+      {/* Lines / dashes on back sheet */}
+      <line x1="21.5" y1="30" x2="24.5" y2="30" stroke="#10172A" strokeWidth="1.25" strokeLinecap="round" />
+      <line x1="21.5" y1="36" x2="24.5" y2="36" stroke="#10172A" strokeWidth="1.25" strokeLinecap="round" />
+      <line x1="21.5" y1="42" x2="24.5" y2="42" stroke="#10172A" strokeWidth="1.25" strokeLinecap="round" />
 
-      {/* Blue right-pointing arrow — spaced out */}
-      <path d="M34 36 L44 36 M41 32 L44 36 L41 40" stroke={BLUE} strokeWidth="1.4" />
+      {/* Front Excel booklet tile with perspective */}
+      <polygon points="7,24 19,21 19,51 7,48" fill="#FFFFFF" stroke="#10172A" strokeWidth="1.25" strokeLinejoin="round" />
 
-      {/* Google Maps style location pin — spaced from arrow */}
-      <path d="M60 33 a8 8 0 1 0 -16 0 c0 7 8 15 8 15 s8 -8 8 -15 Z" />
-      <circle cx="52" cy="33" r="2.8" fill={BLUE} stroke={BLUE} />
+      {/* Blue X mark on front tile */}
+      <path d="M10.5 32 L15.5 40 M15.5 32 L10.5 40" stroke={BLUE} strokeWidth="1.75" strokeLinecap="round" />
+
+      {/* Blue right-pointing arrow with balanced breathing room on left (x=33) and right (x=41) */}
+      <path d="M33 36 L41 36 M38 33 L41 36 L38 39" stroke={BLUE} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+
+      {/* Google Maps style location pin (x=47 to 63) - separated from arrow */}
+      <path d="M63 32 a8 8 0 1 0 -16 0 c0 7 8 16 8 16 s8 -9 8 -16 Z" stroke="#10172A" strokeWidth="1.25" fill="none" strokeLinejoin="round" />
+      <circle cx="55" cy="32" r="2.8" fill={BLUE} stroke={BLUE} />
     </svg>
   );
 }
