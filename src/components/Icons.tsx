@@ -58,20 +58,24 @@ export function LcvIcon(props: IconProps) {
 export function MacroToLocationIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>
-      {/* Excel / Spreadsheet grid icon representation */}
-      <rect x="12" y="25" width="19" height="20" rx="1.5" />
-      <line x1="12" y1="31" x2="31" y2="31" />
-      <line x1="19" y1="25" x2="19" y2="45" />
-      <line x1="25" y1="31" x2="25" y2="45" />
-      <line x1="19" y1="38" x2="31" y2="38" />
-      <path d="M14 30 L17 40 M17 30 L14 40" stroke={BLUE} strokeWidth="1.25" />
+      {/* Excel spreadsheet icon */}
+      <rect x="8" y="22" width="22" height="28" rx="2" />
+      {/* Header bar */}
+      <rect x="8" y="22" width="22" height="7" rx="2" fill="#217346" stroke="#217346" />
+      <rect x="8" y="27" width="22" height="2" fill="#217346" stroke="#217346" />
+      {/* Grid lines */}
+      <line x1="8" y1="35" x2="30" y2="35" />
+      <line x1="8" y1="42" x2="30" y2="42" />
+      <line x1="19" y1="29" x2="19" y2="50" />
+      {/* Centered blue X mark */}
+      <path d="M15 32 L23 40 M23 32 L15 40" stroke={BLUE} strokeWidth="1.8" />
 
-      {/* Styled right pointing arrow (spaced to not overlap pin) */}
-      <path d="M34 35 L42 35 M39 31 L42 35 L39 39" stroke={BLUE} />
+      {/* Blue right-pointing arrow — spaced out */}
+      <path d="M34 36 L44 36 M41 32 L44 36 L41 40" stroke={BLUE} strokeWidth="1.4" />
 
-      {/* Centered Google Maps style Location Pin icon */}
-      <path d="M59 33 a7 7 0 1 0 -14 0 c0 6 7 14 7 14 s7 -8 7 -14 Z" />
-      <circle cx="52" cy="33" r="2.2" fill={BLUE} stroke={BLUE} />
+      {/* Google Maps style location pin — spaced from arrow */}
+      <path d="M60 33 a8 8 0 1 0 -16 0 c0 7 8 15 8 15 s8 -8 8 -15 Z" />
+      <circle cx="52" cy="33" r="2.8" fill={BLUE} stroke={BLUE} />
     </svg>
   );
 }
