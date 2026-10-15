@@ -22,8 +22,7 @@ export const dashboardCards: DashboardCard[] = [
   {
     id: "smt",
     title: "SMT",
-    description:
-      "Daily data-checking web for tracking fieldwork, written offers, and data consistency.",
+    description: "Data-checking web for tracking fieldwork, offers & coding.",
     Icon: SmtIcon,
     actionType: "external_link",
     href: "https://smt.promocar.es:8080/login.aspx",
@@ -33,7 +32,7 @@ export const dashboardCards: DashboardCard[] = [
     id: "360-navigator",
     title: "360 Navigator",
     description:
-      "Client platform for viewing normalised data, scanned offers and Excel exports.",
+      "Client platform for viewing our data, scanned offers and Excel export.",
     Icon: NavigatorIcon,
     actionType: "external_link",
     href: "https://www.promocar360navigator.com/login",
@@ -49,30 +48,27 @@ export const dashboardCards: DashboardCard[] = [
     newTab: true,
   },
   {
-    id: "macro-to-location",
-    title: "MATRIX TO LOCATION",
-    description:
-      "Generate the Location in Excel by uploading a Matrix file and selecting month/year.",
-    Icon: MacroToLocationIcon,
-    actionType: "internal_route",
-    href: "/macro-to-location",
-    newTab: false,
-  },
-  {
     id: "from-pricer-to-matrix",
     title: "FROM PRICER TO MATRIX",
-    description:
-      "Match Matrix versions against the PRICER and fill List Prices and UIDs automatically.",
+    description: "Match PRICER with Matrix versions and get new MSRPs.",
     Icon: PricerIcon,
     actionType: "external_link",
     href: "https://matchwheels.lovable.app/",
     newTab: true,
   },
   {
+    id: "macro-to-location",
+    title: "MATRIX TO LOCATION",
+    description: "Upload a Matrix file & get the Location in Excel.",
+    Icon: MacroToLocationIcon,
+    actionType: "internal_route",
+    href: "/macro-to-location",
+    newTab: false,
+  },
+  {
     id: "checking-com",
-    title: "CHECKING COM",
-    description:
-      "Enhance Checking COM files with pivots, checks, model-line separators and deviations.",
+    title: "CHECKING COM 2.0",
+    description: "Enhance it with pivots, checks, separators and std. Dev.",
     Icon: CheckingComIcon,
     actionType: "internal_route",
     href: "/checking-com",

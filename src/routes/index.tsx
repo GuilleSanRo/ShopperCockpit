@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Kantar Shopper Cockpit: SMT, 360 Navigator, LCV Graphs, Matrix to Location, Pricer to Matrix, Checking COM.",
+          "Kantar Shopper Cockpit: SMT, 360 Navigator, LCV Graphs, Pricer to Matrix, Matrix to Location, Checking COM 2.0.",
       },
       { property: "og:title", content: "Shopper Cockpit — Kantar" },
       {
