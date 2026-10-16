@@ -37,7 +37,7 @@ export function Header() {
       {/* Right: navigation */}
       <nav className="ml-auto flex items-center gap-6 md:gap-10 text-xs md:text-sm font-medium tracking-widest uppercase text-foreground">
         <Link
-          to="/read-me"
+          to="/glossary"
           className="hover:text-[color:var(--accent-blue)] transition-colors"
           activeProps={{ style: { color: "var(--accent-blue)" } }}
         >

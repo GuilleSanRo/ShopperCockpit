@@ -9,16 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ReadMeRouteImport } from './routes/read-me'
+import { Route as GlossaryRouteImport } from './routes/glossary'
 import { Route as OtherLinksRouteImport } from './routes/other-links'
 import { Route as OldLinksRouteImport } from './routes/old-links'
 import { Route as MacroToLocationRouteImport } from './routes/macro-to-location'
 import { Route as CheckingComRouteImport } from './routes/checking-com'
 import { Route as IndexRouteImport } from './routes/index'
 
-const ReadMeRoute = ReadMeRouteImport.update({
-  id: '/read-me',
-  path: '/read-me',
+const GlossaryRoute = GlossaryRouteImport.update({
+  id: '/glossary',
+  path: '/glossary',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OtherLinksRoute = OtherLinksRouteImport.update({
@@ -53,7 +53,7 @@ export interface FileRoutesByFullPath {
   '/macro-to-location': typeof MacroToLocationRoute
   '/old-links': typeof OldLinksRoute
   '/other-links': typeof OtherLinksRoute
-  '/read-me': typeof ReadMeRoute
+  '/glossary': typeof GlossaryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,7 +61,7 @@ export interface FileRoutesByTo {
   '/macro-to-location': typeof MacroToLocationRoute
   '/old-links': typeof OldLinksRoute
   '/other-links': typeof OtherLinksRoute
-  '/read-me': typeof ReadMeRoute
+  '/glossary': typeof GlossaryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,7 +70,7 @@ export interface FileRoutesById {
   '/macro-to-location': typeof MacroToLocationRoute
   '/old-links': typeof OldLinksRoute
   '/other-links': typeof OtherLinksRoute
-  '/read-me': typeof ReadMeRoute
+  '/glossary': typeof GlossaryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -80,7 +80,7 @@ export interface FileRouteTypes {
     | '/macro-to-location'
     | '/old-links'
     | '/other-links'
-    | '/read-me'
+    | '/glossary'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -88,7 +88,7 @@ export interface FileRouteTypes {
     | '/macro-to-location'
     | '/old-links'
     | '/other-links'
-    | '/read-me'
+    | '/glossary'
   id:
     | '__root__'
     | '/'
@@ -96,7 +96,7 @@ export interface FileRouteTypes {
     | '/macro-to-location'
     | '/old-links'
     | '/other-links'
-    | '/read-me'
+    | '/glossary'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -105,16 +105,16 @@ export interface RootRouteChildren {
   MacroToLocationRoute: typeof MacroToLocationRoute
   OldLinksRoute: typeof OldLinksRoute
   OtherLinksRoute: typeof OtherLinksRoute
-  ReadMeRoute: typeof ReadMeRoute
+  GlossaryRoute: typeof GlossaryRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/read-me': {
-      id: '/read-me'
-      path: '/read-me'
-      fullPath: '/read-me'
-      preLoaderRoute: typeof ReadMeRouteImport
+    '/glossary': {
+      id: '/glossary'
+      path: '/glossary'
+      fullPath: '/glossary'
+      preLoaderRoute: typeof GlossaryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/other-links': {
@@ -161,7 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   MacroToLocationRoute: MacroToLocationRoute,
   OldLinksRoute: OldLinksRoute,
   OtherLinksRoute: OtherLinksRoute,
-  ReadMeRoute: ReadMeRoute,
+  GlossaryRoute: GlossaryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

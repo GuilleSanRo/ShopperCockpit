@@ -4,7 +4,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { trackEvent } from "@/lib/analytics";
 
-export const Route = createFileRoute("/read-me")({
+export const Route = createFileRoute("/glossary")({
   head: () => ({
     meta: [
       { title: "GLOSSARY — Shopper Cockpit" },
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/read-me")({
       { property: "og:description", content: "Glosario de términos y conceptos clave de Shopper y automoción." },
     ],
   }),
-  component: ReadMe,
+  component: Glossary,
 });
 
 interface GlossaryItem {
@@ -256,8 +256,8 @@ const glossaryItems: GlossaryItem[] = [
   },
 ];
 
-function ReadMe() {
-  useEffect(() => trackEvent("read_me_opened", {}), []);
+function Glossary() {
+  useEffect(() => trackEvent("glossary_opened", {}), []);
   return (
     <PageShell
       title="GLOSSARY"
