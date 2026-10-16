@@ -41,7 +41,7 @@ export function Header() {
           className="hover:text-[color:var(--accent-blue)] transition-colors"
           activeProps={{ style: { color: "var(--accent-blue)" } }}
         >
-          Read Me
+          GLOSSARY
         </Link>
         <Link
           to="/other-links"
