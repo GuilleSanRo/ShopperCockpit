@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
 import { Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Search, SearchX, X } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 
 export const Route = createFileRoute("/glossary")({
@@ -256,29 +257,256 @@ const glossaryItems: GlossaryItem[] = [
   },
 ];
 
+const COMBINING_MARKS = /[\u0300-\u036f]/g;
+const SUBSCRIPT_DIGITS = /[\u2080-\u2089]/g;
+
+/**
+ * Folds a single character to a search-friendly form: lower case, no accents
+ * and no subscript digits (so "CO₂" is found when typing "co2").
+ */
+function normalizeChar(char: string): string {
+  return char
+    .normalize("NFD")
+    .replace(COMBINING_MARKS, "")
+    .replace(SUBSCRIPT_DIGITS, (digit) => String(digit.charCodeAt(0) - 0x2080))
+    .toLowerCase();
+}
+
+/**
+ * Normalizes a string while keeping a map from every normalized character back
+ * to its original position, so matches can be highlighted on the original text.
+ */
+function normalizeWithMap(value: string): { text: string; map: number[] } {
+  let text = "";
+  const map: number[] = [];
+  for (let i = 0; i < value.length; i += 1) {
+    const normalized = normalizeChar(value[i]);
+    for (let j = 0; j < normalized.length; j += 1) map.push(i);
+    text += normalized;
+  }
+  return { text, map };
+}
+
+function normalizeText(value: string): string {
+  return normalizeWithMap(value).text;
+}
+
+const glossaryIndex = glossaryItems.map((item, index) => ({
+  item,
+  index,
+  haystack: `${normalizeText(item.term)} ${normalizeText(item.definition)}`,
+}));
+
+function HighlightText({ text, tokens }: { text: string; tokens: string[] }) {
+  const parts = useMemo<ReactNode[]>(() => {
+    if (tokens.length === 0) return [text];
+
+    const { text: normalized, map } = normalizeWithMap(text);
+    const ranges: Array<[number, number]> = [];
+
+    for (const token of tokens) {
+      let from = 0;
+      while (from <= normalized.length - token.length) {
+        const found = normalized.indexOf(token, from);
+        if (found === -1) break;
+        ranges.push([map[found], map[found + token.length - 1] + 1]);
+        from = found + token.length;
+      }
+    }
+
+    if (ranges.length === 0) return [text];
+
+    ranges.sort((a, b) => a[0] - b[0]);
+    const merged: Array<[number, number]> = [];
+    for (const [start, end] of ranges) {
+      const last = merged[merged.length - 1];
+      if (last && start <= last[1]) last[1] = Math.max(last[1], end);
+      else merged.push([start, end]);
+    }
+
+    const nodes: ReactNode[] = [];
+    let cursor = 0;
+    merged.forEach(([start, end], i) => {
+      if (start > cursor) nodes.push(text.slice(cursor, start));
+      nodes.push(
+        <mark
+          key={`mark-${i}`}
+          style={{
+            backgroundColor: "rgba(49, 92, 255, 0.16)",
+            color: "inherit",
+            padding: 0,
+            borderRadius: 2,
+          }}
+        >
+          {text.slice(start, end)}
+        </mark>,
+      );
+      cursor = end;
+    });
+    if (cursor < text.length) nodes.push(text.slice(cursor));
+    return nodes;
+  }, [text, tokens]);
+
+  return <>{parts}</>;
+}
+
 function Glossary() {
+  const [query, setQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => trackEvent("glossary_opened", {}), []);
+
+  // Press "/" anywhere on the page to jump into the search box.
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (
+        target &&
+        (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName))
+      ) {
+        return;
+      }
+      event.preventDefault();
+      inputRef.current?.focus();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const tokens = useMemo(() => {
+    const normalized = normalizeText(query).trim();
+    return normalized ? normalized.split(/\s+/).filter(Boolean) : [];
+  }, [query]);
+
+  const results = useMemo(() => {
+    if (tokens.length === 0) return glossaryIndex;
+    return glossaryIndex.filter(({ haystack }) =>
+      tokens.every((token) => haystack.includes(token)),
+    );
+  }, [tokens]);
+
+  const isFiltering = tokens.length > 0;
+
+  const clearSearch = () => {
+    setQuery("");
+    inputRef.current?.focus();
+  };
+
   return (
     <PageShell
       title="GLOSSARY"
       subtitle="Glosario de conceptos y métricas clave utilizados en el sector de automoción y en las herramientas de Shopper."
     >
-      <ol className="space-y-4">
-        {glossaryItems.map((item, i) => (
-          <li
-            key={`${item.term}-${i}`}
-            className="border p-5 bg-white"
+      <div
+        role="search"
+        aria-label="Glossary search"
+        className="sticky top-16 z-30 -mx-6 mb-6 bg-background/95 px-6 py-3 backdrop-blur md:-mx-10 md:px-10"
+      >
+        <div className="relative">
+          <Search
+            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2"
+            style={{ color: "var(--text-secondary)" }}
+            aria-hidden
+          />
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape" && query) {
+                event.preventDefault();
+                clearSearch();
+              }
+            }}
+            placeholder="Search a term or its description…"
+            aria-label="Search the glossary by term or description"
+            enterKeyHint="search"
+            autoComplete="off"
+            spellCheck={false}
+            className="w-full border bg-white py-3 pl-10 pr-12 text-sm text-foreground outline-none transition focus:border-[color:var(--accent-blue)] focus:shadow-[0_0_0_3px_rgba(49,92,255,0.15)]"
             style={{ borderColor: "#E1E4EE", borderRadius: 4 }}
+          />
+          <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center">
+            {query ? (
+              <button
+                type="button"
+                onClick={clearSearch}
+                aria-label="Clear search"
+                className="flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-[color:var(--secondary)]"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                <X className="h-4 w-4" aria-hidden />
+              </button>
+            ) : (
+              <kbd
+                className="hidden rounded border px-1.5 py-0.5 text-[10px] font-medium sm:inline-block"
+                style={{ borderColor: "#E1E4EE", color: "var(--text-secondary)" }}
+              >
+                /
+              </kbd>
+            )}
+          </div>
+        </div>
+        <div
+          className="mt-2 flex items-center justify-between gap-3 text-xs"
+          style={{ color: "var(--text-secondary)" }}
+        >
+          <span aria-live="polite" aria-atomic="true">
+            {isFiltering
+              ? `${results.length} of ${glossaryItems.length} terms`
+              : `${glossaryItems.length} terms`}
+          </span>
+          <span className="hidden sm:inline">
+            {isFiltering ? "Press Esc to clear" : "Press / to search"}
+          </span>
+        </div>
+      </div>
+
+      {results.length === 0 ? (
+        <div
+          className="border bg-white p-10 text-center"
+          style={{ borderColor: "#E1E4EE", borderRadius: 4 }}
+        >
+          <SearchX
+            className="mx-auto h-8 w-8"
+            style={{ color: "var(--text-secondary)" }}
+            aria-hidden
+          />
+          <p className="mt-3 text-sm font-medium">
+            No terms match “{query.trim()}”
+          </p>
+          <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+            Try another word — the search looks in both terms and descriptions.
+          </p>
+          <button
+            type="button"
+            onClick={clearSearch}
+            className="mt-4 px-4 py-2 text-sm font-medium text-white"
+            style={{ backgroundColor: "var(--accent-blue)", borderRadius: 4 }}
           >
-            <h2 className="text-sm uppercase tracking-widest font-semibold text-foreground">
-              {i + 1}. {item.term}
-            </h2>
-            <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
-              {item.definition}
-            </p>
-          </li>
-        ))}
-      </ol>
+            Clear search
+          </button>
+        </div>
+      ) : (
+        <ol className="space-y-4">
+          {results.map(({ item, index }) => (
+            <li
+              key={`${item.term}-${index}`}
+              className="border p-5 bg-white"
+              style={{ borderColor: "#E1E4EE", borderRadius: 4 }}
+            >
+              <h2 className="text-sm uppercase tracking-widest font-semibold text-foreground">
+                {index + 1}. <HighlightText text={item.term} tokens={tokens} />
+              </h2>
+              <p className="mt-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+                <HighlightText text={item.definition} tokens={tokens} />
+              </p>
+            </li>
+          ))}
+        </ol>
+      )}
       <div className="mt-8">
         <Link
           to="/"
