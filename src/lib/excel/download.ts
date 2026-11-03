@@ -19,8 +19,8 @@ export function stripExt(name: string): string {
 
 export function validateExcelFile(file: File): string | null {
   const ext = file.name.toLowerCase().split(".").pop();
-  if (!ext || !["xlsx", "xlsm", "xls"].includes(ext)) {
-    return "File must be .xlsx, .xlsm, or .xls.";
+  if (!ext || !["xlsx", "xlsm"].includes(ext)) {
+    return "File must be .xlsx or .xlsm. Legacy .xls files are not supported.";
   }
   if (file.size > 25 * 1024 * 1024) return "File exceeds 25 MB.";
   return null;

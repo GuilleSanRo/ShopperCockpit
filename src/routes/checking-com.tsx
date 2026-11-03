@@ -55,7 +55,7 @@ function CheckingCom() {
     try {
       const bytes = await file.arrayBuffer();
       const copy = bytes.slice(0);
-      const { outputBytes } = await processCheckingCom({ fileBytes: copy });
+      const { outputBytes } = await processCheckingCom({ fileBytes: copy, fileName: file.name });
       const filename = `Checking_COM_processed_${stripExt(file.name)}.xlsx`;
       setOutput({ bytes: outputBytes, filename });
       setStatus("success");
