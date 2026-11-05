@@ -95,7 +95,7 @@ function DatTool() {
   return (
     <PageShell
       title="DAT TOOL"
-      subtitle="Residual values and guaranteed future values — open DAT Group, or copy the My-DAT link."
+      subtitle="Residual Values (RVs) and Guaranteed Future Values (GFVs) from DAT Tool:"
     >
       <div className="border overflow-hidden" style={panelStyle}>
         <table className="w-full text-sm">
