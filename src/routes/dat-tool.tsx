@@ -11,7 +11,7 @@ export const Route = createFileRoute("/dat-tool")({
       { title: "DAT Tool — Shopper Cockpit" },
       {
         name: "description",
-        content: "Open DAT Group and My-DAT to search residual values and guaranteed future values.",
+        content: "Open DAT Group and My-DAT to search Residual Values (RVs) and Guaranteed Future Values (GFVs):",
       },
       { property: "og:title", content: "DAT Tool — Shopper Cockpit" },
       {
