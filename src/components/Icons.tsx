@@ -115,8 +115,6 @@ export function ModelListIcon(props: IconProps) {
       <rect x="12" y="10" width="48" height="54" rx="2" />
       {/* Column divider */}
       <line x1="36" y1="20" x2="36" y2="56" />
-      {/* Header row accent */}
-      <rect x="12" y="10" width="48" height="10" rx="2" fill={BLUE} stroke={BLUE} strokeWidth="0" />
       {/* Row 1 - left blue, right normal */}
       <line x1="16" y1="30" x2="32" y2="30" stroke={BLUE} strokeWidth="1.6" strokeLinecap="round" />
       <line x1="40" y1="30" x2="56" y2="30" strokeLinecap="round" />
