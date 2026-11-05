@@ -6,6 +6,9 @@ import {
   MacroToLocationIcon,
   PricerIcon,
   CheckingComIcon,
+  ModelListIcon,
+  DatToolIcon,
+  CarWebsIcon,
 } from "@/components/Icons";
 
 export interface DashboardCard {
@@ -13,7 +16,7 @@ export interface DashboardCard {
   title: string;
   description: string;
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
-  actionType: "external_link" | "internal_route";
+  actionType: "external_link" | "internal_route" | "none";
   href: string;
   newTab: boolean;
 }
@@ -72,6 +75,33 @@ export const dashboardCards: DashboardCard[] = [
     Icon: CheckingComIcon,
     actionType: "internal_route",
     href: "/checking-com",
+    newTab: false,
+  },
+  {
+    id: "model-list",
+    title: "MODEL LIST",
+    description: "List of promoCAR models for Model Code and Segments.",
+    Icon: ModelListIcon,
+    actionType: "none",
+    href: "",
+    newTab: false,
+  },
+  {
+    id: "dat-tool",
+    title: "DAT TOOL",
+    description: "to search Residual and Guaranteed Future Values.",
+    Icon: DatToolIcon,
+    actionType: "none",
+    href: "",
+    newTab: false,
+  },
+  {
+    id: "car-webs",
+    title: "CAR WEBS",
+    description: "Links to consult information of vehicles in internet.",
+    Icon: CarWebsIcon,
+    actionType: "none",
+    href: "",
     newTab: false,
   },
 ];

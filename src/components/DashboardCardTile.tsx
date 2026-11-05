@@ -16,9 +16,10 @@ export function DashboardCardTile({ card }: Props) {
     if (card.actionType === "external_link") {
       trackEvent("external_link_opened", { id: card.id, href: card.href });
       window.open(card.href, "_blank", "noopener,noreferrer");
-    } else {
+    } else if (card.actionType === "internal_route") {
       navigate({ to: card.href });
     }
+    // actionType === "none" → no-op (coming soon)
   };
 
   const onKey = (e: KeyboardEvent) => {

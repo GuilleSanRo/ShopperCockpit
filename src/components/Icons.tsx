@@ -107,3 +107,88 @@ export function CheckingComIcon(props: IconProps) {
   );
 }
 
+/** MODEL LIST — paper with 2-column item list */
+export function ModelListIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      {/* Paper / document */}
+      <rect x="12" y="10" width="48" height="54" rx="2" />
+      {/* Column divider */}
+      <line x1="36" y1="20" x2="36" y2="56" />
+      {/* Header row accent */}
+      <rect x="12" y="10" width="48" height="10" rx="2" fill={BLUE} stroke={BLUE} strokeWidth="0" />
+      {/* Row 1 - left blue, right normal */}
+      <line x1="16" y1="30" x2="32" y2="30" stroke={BLUE} strokeWidth="1.6" strokeLinecap="round" />
+      <line x1="40" y1="30" x2="56" y2="30" strokeLinecap="round" />
+      {/* Row 2 */}
+      <line x1="16" y1="38" x2="32" y2="38" strokeLinecap="round" />
+      <line x1="40" y1="38" x2="56" y2="38" stroke={BLUE} strokeWidth="1.6" strokeLinecap="round" />
+      {/* Row 3 */}
+      <line x1="16" y1="46" x2="32" y2="46" stroke={BLUE} strokeWidth="1.6" strokeLinecap="round" />
+      <line x1="40" y1="46" x2="56" y2="46" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/** DAT TOOL — car side silhouette + "RV / GFV" text above */
+export function DatToolIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      {/* "RV / GFV" label */}
+      <text
+        x="36"
+        y="16"
+        textAnchor="middle"
+        fontSize="8"
+        fontFamily="sans-serif"
+        fontWeight="700"
+        fill={BLUE}
+        stroke="none"
+        strokeWidth="0"
+      >RV / GFV</text>
+      {/* Car body side silhouette */}
+      <path d="M8 50 L8 42 Q8 36 14 36 L20 36 L28 24 L48 24 L56 36 L62 36 Q66 36 66 42 L66 50 Z" />
+      {/* Windshield */}
+      <path d="M28 24 L23 36 L44 36 L42 24 Z" fill="#FFFFFF" />
+      {/* Rear window */}
+      <path d="M42 24 L48 24 L56 36 L44 36 Z" fill="#FFFFFF" />
+      {/* Wheels */}
+      <circle cx="22" cy="50" r="7" fill="#FFFFFF" />
+      <circle cx="22" cy="50" r="2.8" fill={BLUE} stroke={BLUE} />
+      <circle cx="54" cy="50" r="7" fill="#FFFFFF" />
+      <circle cx="54" cy="50" r="2.8" fill={BLUE} stroke={BLUE} />
+    </svg>
+  );
+}
+
+/** CAR WEBS — car front view (left) + globe with meridians/parallels (right) */
+export function CarWebsIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      {/* ── Car front view (left half) ── */}
+      {/* Body */}
+      <rect x="4" y="32" width="28" height="20" rx="2" />
+      {/* Roof cabin */}
+      <path d="M9 32 L12 20 L24 20 L27 32 Z" />
+      {/* Windshield cutout */}
+      <path d="M13 32 L15 23 L21 23 L23 32 Z" fill="#FFFFFF" />
+      {/* Left headlight */}
+      <rect x="6" y="42" width="7" height="4" rx="1" fill={BLUE} stroke={BLUE} strokeWidth="0" />
+      {/* Right headlight */}
+      <rect x="23" y="42" width="7" height="4" rx="1" fill={BLUE} stroke={BLUE} strokeWidth="0" />
+      {/* Grille */}
+      <rect x="14" y="42" width="8" height="4" rx="1" />
+
+      {/* ── Globe (right half) ── */}
+      <circle cx="52" cy="36" r="16" />
+      {/* Vertical meridian ellipse */}
+      <ellipse cx="52" cy="36" rx="7" ry="16" />
+      {/* Horizontal parallels */}
+      <line x1="36" y1="30" x2="68" y2="30" />
+      <line x1="36" y1="36" x2="68" y2="36" />
+      <line x1="36" y1="42" x2="68" y2="42" />
+      {/* Blue accent dot at globe centre */}
+      <circle cx="52" cy="36" r="2.5" fill={BLUE} stroke={BLUE} strokeWidth="0" />
+    </svg>
+  );
+}
