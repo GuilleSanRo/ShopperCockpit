@@ -42,7 +42,7 @@ export function DashboardCardTile({ card }: Props) {
         borderColor: "#E1E4EE",
         borderRadius: 4,
         padding: 32,
-        minHeight: 300,
+        minHeight: 260,
         // @ts-expect-error css var
         "--tw-ring-color": "var(--accent-blue)",
       }}

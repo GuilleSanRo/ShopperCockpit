@@ -161,34 +161,20 @@ export function DatToolIcon(props: IconProps) {
   );
 }
 
-/** CAR WEBS — car front view (left) + globe with meridians/parallels (right) */
+/** CAR WEBS — globe with meridians, parallels and a blue centre dot */
 export function CarWebsIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>
-      {/* ── Car front view (left half) ── */}
-      {/* Body */}
-      <rect x="4" y="32" width="28" height="20" rx="2" />
-      {/* Roof cabin */}
-      <path d="M9 32 L12 20 L24 20 L27 32 Z" />
-      {/* Windshield cutout */}
-      <path d="M13 32 L15 23 L21 23 L23 32 Z" fill="#FFFFFF" />
-      {/* Left headlight */}
-      <rect x="6" y="42" width="7" height="4" rx="1" fill={BLUE} stroke={BLUE} strokeWidth="0" />
-      {/* Right headlight */}
-      <rect x="23" y="42" width="7" height="4" rx="1" fill={BLUE} stroke={BLUE} strokeWidth="0" />
-      {/* Grille */}
-      <rect x="14" y="42" width="8" height="4" rx="1" />
-
-      {/* ── Globe (right half) ── */}
-      <circle cx="52" cy="36" r="16" />
+      {/* Outer circle */}
+      <circle cx="36" cy="36" r="22" />
       {/* Vertical meridian ellipse */}
-      <ellipse cx="52" cy="36" rx="7" ry="16" />
+      <ellipse cx="36" cy="36" rx="10" ry="22" />
       {/* Horizontal parallels */}
-      <line x1="36" y1="30" x2="68" y2="30" />
-      <line x1="36" y1="36" x2="68" y2="36" />
-      <line x1="36" y1="42" x2="68" y2="42" />
-      {/* Blue accent dot at globe centre */}
-      <circle cx="52" cy="36" r="2.5" fill={BLUE} stroke={BLUE} strokeWidth="0" />
+      <line x1="14" y1="24" x2="58" y2="24" />
+      <line x1="14" y1="36" x2="58" y2="36" />
+      <line x1="14" y1="48" x2="58" y2="48" />
+      {/* Blue accent dot at centre */}
+      <circle cx="36" cy="36" r="3" fill={BLUE} stroke={BLUE} strokeWidth="0" />
     </svg>
   );
 }
