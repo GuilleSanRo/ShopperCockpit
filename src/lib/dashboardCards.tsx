@@ -89,10 +89,10 @@ export const dashboardCards: DashboardCard[] = [
   {
     id: "dat-tool",
     title: "DAT TOOL",
-    description: "to search Residual and Guaranteed Future Values.",
+    description: "To search Residual Values and Guaranteed Future Values.",
     Icon: DatToolIcon,
     actionType: "external_link",
-    href: "https://ktglbuc.sharepoint.com/:x:/r/sites/cdp-promocar/spain/promocar/_layouts/15/Doc.aspx?sourcedoc=%7B2AAF4C4D-2F0A-4C0C-92DB-22119B698CBF%7D&file=Models%20List%20(Codes).xlsx&action=default&mobileredirect=true",
+    href: "https://www.datgroup.com/es-es/my-dat/dashboard/",
     newTab: true,
   },
   {
@@ -100,8 +100,8 @@ export const dashboardCards: DashboardCard[] = [
     title: "CAR WEBS",
     description: "Links to consult information of vehicles in internet.",
     Icon: CarWebsIcon,
-    actionType: "external_link",
-    href: "https://ktglbuc.sharepoint.com/:x:/r/sites/cdp-promocar/spain/promocar/_layouts/15/Doc.aspx?sourcedoc=%7B2AAF4C4D-2F0A-4C0C-92DB-22119B698CBF%7D&file=Models%20List%20(Codes).xlsx&action=default&mobileredirect=true",
-    newTab: true,
+    actionType: "none",
+    href: "",
+    newTab: false,
   },
 ];
