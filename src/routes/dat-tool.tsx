@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Check, Copy, ExternalLink, Info } from "lucide-react";
+import { Check, Copy, ExternalLink } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { trackEvent } from "@/lib/analytics";
 import { DAT_DASHBOARD_URL, DAT_ENTRY_URL } from "@/lib/datLinks";
@@ -8,15 +8,19 @@ import { DAT_DASHBOARD_URL, DAT_ENTRY_URL } from "@/lib/datLinks";
 export const Route = createFileRoute("/dat-tool")({
   head: () => ({
     meta: [
-      { title: "DAT Tool — Shopper Cockpit" },
+      { title: "DAT TOOL — Shopper Cockpit" },
       {
         name: "description",
+<<<<<<< HEAD
         content: "Open DAT Group and My-DAT to search Residual Values (RVs) and Guaranteed Future Values (GFVs):",
+=======
+        content: "DAT Group and My-DAT links for residual values and guaranteed future values.",
+>>>>>>> d732732c924aeacd15e54d414e0d1812dfd04011
       },
-      { property: "og:title", content: "DAT Tool — Shopper Cockpit" },
+      { property: "og:title", content: "DAT TOOL — Shopper Cockpit" },
       {
         property: "og:description",
-        content: "Open DAT Group and My-DAT to search residual values and guaranteed future values.",
+        content: "DAT Group and My-DAT links for residual values and guaranteed future values.",
       },
     ],
   }),
@@ -29,14 +33,9 @@ const panelStyle = {
   borderRadius: 4,
 } as const;
 
-const primaryButtonStyle = {
-  backgroundColor: "var(--accent-blue)",
-  borderRadius: 4,
-} as const;
-
-const secondaryButtonStyle = {
+const headStyle = {
+  backgroundColor: "#F7F8FC",
   borderColor: "#E1E4EE",
-  borderRadius: 4,
 } as const;
 
 async function copyText(text: string): Promise<boolean> {
@@ -65,121 +64,126 @@ async function copyText(text: string): Promise<boolean> {
   }
 }
 
+const datLinks = [
+  {
+    id: "entry",
+    name: "DAT Group",
+    hint: "Homepage. Opens normally from a click.",
+    url: DAT_ENTRY_URL,
+    clickable: true,
+  },
+  {
+    id: "dashboard",
+    name: "My-DAT dashboard",
+    hint: "Copy this one and paste it in a new tab.",
+    url: DAT_DASHBOARD_URL,
+    clickable: false,
+  },
+] as const;
+
 function DatTool() {
-  const [copied, setCopied] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const openEntryPage = () => {
-    trackEvent("dat_tool_entry_opened", { url: DAT_ENTRY_URL });
-  };
-
-  const openDashboard = () => {
-    trackEvent("dat_tool_dashboard_opened", { url: DAT_DASHBOARD_URL });
-  };
-
-  const copyDashboardUrl = async () => {
-    const ok = await copyText(DAT_DASHBOARD_URL);
+  const copy = async (id: string, url: string) => {
+    const ok = await copyText(url);
     if (!ok) return;
-    setCopied(true);
-    trackEvent("dat_tool_link_copied", { url: DAT_DASHBOARD_URL });
-    window.setTimeout(() => setCopied(false), 2000);
+    setCopiedId(id);
+    trackEvent("dat_tool_link_copied", { url });
+    window.setTimeout(() => setCopiedId((current) => (current === id ? null : current)), 2000);
   };
 
   return (
     <PageShell
-      title="DAT Tool"
-      subtitle="Access DAT Group to search residual values and guaranteed future values."
+      title="DAT TOOL"
+      subtitle="Residual values and guaranteed future values — open DAT Group, or copy the My-DAT link."
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <section className="border p-6" style={panelStyle}>
-          <h2 className="text-base font-semibold uppercase tracking-wider text-foreground">
-            1. Open DAT Group
-          </h2>
-          <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            Opens the DAT Group entry page in a new tab. From there, use the user menu
-            (&ldquo;Área privada&rdquo;) to sign in and reach My-DAT. Navigating inside
-            datgroup.com is allowed, so the private area loads normally.
-          </p>
-          <a
-            href={DAT_ENTRY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={openEntryPage}
-            className="mt-5 inline-flex items-center gap-2 px-5 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
-            style={primaryButtonStyle}
-          >
-            Open DAT Group
-            <ExternalLink className="w-4 h-4" aria-hidden />
-          </a>
-        </section>
-
-        <section className="border p-6" style={panelStyle}>
-          <h2 className="text-base font-semibold uppercase tracking-wider text-foreground">
-            2. Direct My-DAT dashboard link
-          </h2>
-          <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            Copy this link and paste it in a new browser tab&rsquo;s address bar (or save it
-            as a bookmark). A pasted URL is opened as a direct navigation, which DAT allows.
-          </p>
-
-          <label htmlFor="dat-dashboard-url" className="sr-only">
-            My-DAT dashboard URL
-          </label>
-          <div className="mt-5 flex flex-col sm:flex-row gap-2">
-            <input
-              id="dat-dashboard-url"
-              type="text"
-              readOnly
-              value={DAT_DASHBOARD_URL}
-              onFocus={(e) => e.currentTarget.select()}
-              spellCheck={false}
-              className="flex-1 min-w-0 border bg-white px-3 py-2 text-sm"
-              style={{ borderColor: "#E1E4EE", borderRadius: 4 }}
-            />
-            <button
-              type="button"
-              onClick={copyDashboardUrl}
-              aria-label="Copy My-DAT dashboard link"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
-              style={primaryButtonStyle}
-            >
-              {copied ? (
-                <Check className="w-4 h-4" aria-hidden />
-              ) : (
-                <Copy className="w-4 h-4" aria-hidden />
-              )}
-              {copied ? "Copied" : "Copy"}
-            </button>
-          </div>
-
-          <a
-            href={DAT_DASHBOARD_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={openDashboard}
-            className="mt-3 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium border hover:text-[color:var(--accent-blue)] transition-colors"
-            style={secondaryButtonStyle}
-          >
-            Open direct link
-            <ExternalLink className="w-4 h-4" aria-hidden />
-          </a>
-
-          <p
-            className="mt-4 flex items-start gap-2 text-xs leading-relaxed"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            <Info className="w-4 h-4 mt-0.5 shrink-0" aria-hidden />
-            <span>
-              DAT blocks this exact URL when it is reached from a link click on another
-              website, and answers with a blank &ldquo;ccc&rdquo; page. That is why the entry
-              page above is the recommended route; use Copy to paste the link instead of
-              clicking it.
-            </span>
-          </p>
-        </section>
+      <div className="border overflow-hidden" style={panelStyle}>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b" style={headStyle}>
+              <th
+                scope="col"
+                className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-foreground"
+              >
+                Tool
+              </th>
+              <th
+                scope="col"
+                className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-foreground"
+              >
+                URL
+              </th>
+              <th scope="col" className="px-4 py-3 text-right w-px">
+                <span className="sr-only">Copy</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {datLinks.map((item, index) => (
+              <tr
+                key={item.id}
+                className={index > 0 ? "border-t align-top" : "align-top"}
+                style={index > 0 ? { borderColor: "#E1E4EE" } : undefined}
+              >
+                <td className="px-4 py-4 align-top w-52">
+                  <span className="font-semibold text-foreground block">{item.name}</span>
+                  <span className="mt-1 block text-xs" style={{ color: "var(--text-secondary)" }}>
+                    {item.hint}
+                  </span>
+                </td>
+                <td className="px-4 py-4 align-top">
+                  {item.clickable ? (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() =>
+                        trackEvent("dat_tool_entry_opened", { url: item.url })
+                      }
+                      className="inline-flex items-start gap-1 break-all font-mono text-[13px] hover:underline"
+                      style={{ color: "var(--accent-blue)" }}
+                    >
+                      <span className="select-all break-all">{item.url}</span>
+                      <ExternalLink className="w-3.5 h-3.5 mt-0.5 shrink-0" aria-hidden />
+                    </a>
+                  ) : (
+                    <span
+                      className="block break-all font-mono text-[13px] select-all"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      {item.url}
+                    </span>
+                  )}
+                </td>
+                <td className="px-4 py-4 align-top text-right w-px whitespace-nowrap">
+                  <button
+                    type="button"
+                    onClick={() => copy(item.id, item.url)}
+                    aria-label={`Copy ${item.name} URL`}
+                    className="inline-flex items-center gap-1.5 border px-3 py-1.5 text-xs font-medium hover:text-[color:var(--accent-blue)] transition-colors"
+                    style={{ borderColor: "#E1E4EE", borderRadius: 4 }}
+                  >
+                    {copiedId === item.id ? (
+                      <Check className="w-3.5 h-3.5" aria-hidden />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" aria-hidden />
+                    )}
+                    {copiedId === item.id ? "Copied" : "Copy"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
+      <p className="mt-4 text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+        My-DAT refuses link clicks coming from another website and answers with a blank page,
+        so paste that URL instead of clicking it.
+      </p>
+
       <div aria-live="polite" className="sr-only">
-        {copied ? "My-DAT dashboard link copied to clipboard." : ""}
+        {copiedId ? `${copiedId} URL copied to clipboard.` : ""}
       </div>
     </PageShell>
   );

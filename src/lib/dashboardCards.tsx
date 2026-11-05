@@ -11,15 +11,30 @@ import {
   CarWebsIcon,
 } from "@/components/Icons";
 
-export interface DashboardCard {
+/** Pages that live inside this app and can be reached without leaving the site. */
+export type InternalRoute = "/macro-to-location" | "/checking-com" | "/dat-tool";
+
+interface DashboardCardBase {
   id: string;
   title: string;
   description: string;
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
-  actionType: "external_link" | "internal_route" | "none";
-  href: string;
   newTab: boolean;
 }
+
+/**
+ * A card either links to another website (external_link), opens one of our own
+ * pages in the same tab (internal_route), or does nothing yet (none).
+ *
+ * The union keeps `internal_route` cards restricted to real in-app paths, so a
+ * third-party URL can never end up behind an internal navigation again.
+ */
+export type DashboardCard = DashboardCardBase &
+  (
+    | { actionType: "external_link"; href: string }
+    | { actionType: "internal_route"; href: InternalRoute }
+    | { actionType: "none"; href: string }
+  );
 
 export const dashboardCards: DashboardCard[] = [
   {
@@ -91,6 +106,7 @@ export const dashboardCards: DashboardCard[] = [
     title: "DAT TOOL",
     description: "To search Residual Values and Guaranteed Future Values.",
     Icon: DatToolIcon,
+    // Opens our own DAT page in the same tab, exactly like MATRIX TO LOCATION.
     actionType: "internal_route",
     href: "/dat-tool",
     newTab: true,

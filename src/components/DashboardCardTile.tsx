@@ -1,7 +1,7 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import type { DashboardCard } from "@/lib/dashboardCards";
 import { trackEvent } from "@/lib/analytics";
-import type { KeyboardEvent, MouseEvent as ReactMouseEvent, ReactNode } from "react";
+import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 
 interface Props {
   card: DashboardCard;
@@ -37,7 +37,6 @@ const hoverHandlers = {
 };
 
 export function DashboardCardTile({ card }: Props) {
-  const navigate = useNavigate();
   const { Icon } = card;
 
   const track = () => {
@@ -80,31 +79,21 @@ export function DashboardCardTile({ card }: Props) {
     );
   }
 
+  // In-app pages are rendered as a router <Link>, i.e. a real anchor pointing at
+  // our own path (e.g. "/dat-tool"). Clicking it stays in this tab and can never
+  // navigate away to a third-party site.
   if (card.actionType === "internal_route") {
-    const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        track();
-        navigate({ to: card.href });
-      }
-    };
-
     return (
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={() => {
-          track();
-          navigate({ to: card.href });
-        }}
-        onKeyDown={onKey}
+      <Link
+        to={card.href}
+        onClick={track}
         {...hoverHandlers}
         aria-label={`${card.title}. ${card.description}`}
         className={tileClass}
         style={tileStyle}
       >
         {content}
-      </div>
+      </Link>
     );
   }
 
