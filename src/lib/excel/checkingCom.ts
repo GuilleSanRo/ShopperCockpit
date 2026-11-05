@@ -27,6 +27,64 @@ const UNHIDE_RANGES: Array<[number, number]> = [
   [58, 59], // BF:BG
 ];
 
+/**
+ * Deep-clone helper. ExcelJS shares style objects between cells, so a style
+ * must never be mutated in place — clone it, change it, assign it back.
+ */
+const clone = <T>(value: T | null | undefined): T =>
+  (value ? JSON.parse(JSON.stringify(value)) : {}) as T;
+
+/** XML-illegal control characters (keeps \t, \n and \r). */
+const CONTROL_CHARS = /[\x00-\x08\x0B\x0C\x0E-\x1F]/g;
+const cleanString = (value: string): string => value.replace(CONTROL_CHARS, "");
+
+/** Strips control characters from every string carried by a cell value. */
+function cleanValue(value: ExcelJS.CellValue): ExcelJS.CellValue {
+  if (typeof value === "string") return cleanString(value);
+  if (value && typeof value === "object") {
+    if ("richText" in value) {
+      const rich = value as ExcelJS.CellRichTextValue;
+      return {
+        richText: rich.richText.map((run) => ({ ...run, text: cleanString(run.text) })),
+      };
+    }
+    if ("hyperlink" in value) {
+      const link = value as ExcelJS.CellHyperlinkValue;
+      return { ...link, text: cleanString(link.text) };
+    }
+    if ("formula" in value || "sharedFormula" in value) {
+      const formula = value as ExcelJS.CellFormulaValue;
+      return typeof formula.result === "string"
+        ? { ...formula, result: cleanString(formula.result) }
+        : value;
+    }
+  }
+  return value;
+}
+
+function colLetter(col: number): string {
+  let s = "";
+  let n = col;
+  while (n > 0) {
+    s = String.fromCharCode(65 + ((n - 1) % 26)) + s;
+    n = Math.floor((n - 1) / 26);
+  }
+  return s;
+}
+
+/** Bold applied per cell (never through row.font, which shares style objects). */
+function setBold(cell: ExcelJS.Cell): void {
+  const style = clone(cell.style);
+  style.font = { ...(style.font || {}), bold: true };
+  cell.style = style;
+}
+
+/**
+ * ExcelJS exposes `orderNo` at runtime (it drives the tab order) but it is
+ * missing from the published typings, so widen the type explicitly.
+ */
+type OrderedWorksheet = ExcelJS.Worksheet & { orderNo: number };
+
 function stddev(nums: number[]): number {
   if (nums.length < 2) return 0;
   const m = nums.reduce((a, b) => a + b, 0) / nums.length;
@@ -130,7 +188,8 @@ function buildSummary(
   // A1 = "Row Labels", B1 = aggregation label (matches VBA pivot layout)
   sheet.getCell(1, 1).value = "Row Labels";
   sheet.getCell(1, 2).value = outLabel;
-  sheet.getRow(1).font = { bold: true };
+  setBold(sheet.getCell(1, 1));
+  setBold(sheet.getCell(1, 2));
 
   // Sort groups case-insensitively, numeric-aware
   const sortedGroups = [...groups.keys()].sort((a, b) =>
@@ -183,7 +242,8 @@ function buildSummary(
   // Grand Total row — stdev/average of ALL values across all groups
   const grandTotalRow = r;
   sheet.getCell(grandTotalRow, 1).value = "Grand Total";
-  sheet.getRow(grandTotalRow).font = { bold: true };
+  setBold(sheet.getCell(grandTotalRow, 1));
+  setBold(sheet.getCell(grandTotalRow, 2));
   if (agg === "stdev") {
     if (allValues.length < 2) {
       sheet.getCell(grandTotalRow, 2).value = { error: "#DIV/0!" } as ExcelJS.CellErrorValue;
@@ -196,6 +256,40 @@ function buildSummary(
 
   sheet.getColumn(1).width = 24;
   sheet.getColumn(2).width = 32;
+}
+
+/**
+ * Copies only the whitelisted content of the source sheet into the clean
+ * workbook: cell values, cloned styles, row heights, column widths and hidden
+ * state, merged ranges and worksheet views (frozen panes).
+ */
+function copySheet(src: ExcelJS.Worksheet, dst: ExcelJS.Worksheet): void {
+  const columnCount = src.columnCount;
+  for (let c = 1; c <= columnCount; c++) {
+    const srcCol = src.getColumn(c);
+    const dstCol = dst.getColumn(c);
+    if (srcCol.width !== undefined) dstCol.width = srcCol.width;
+    if (srcCol.hidden) dstCol.hidden = true;
+  }
+
+  const rowCount = src.rowCount;
+  for (let r = 1; r <= rowCount; r++) {
+    const srcRow = src.getRow(r);
+    const dstRow = dst.getRow(r);
+    const height = srcRow.height as number | undefined;
+    if (height !== undefined) dstRow.height = height;
+    srcRow.eachCell({ includeEmpty: true }, (srcCell, c) => {
+      const dstCell = dstRow.getCell(c);
+      dstCell.value = cleanValue(srcCell.value);
+      dstCell.style = clone(srcCell.style);
+    });
+  }
+
+  for (const range of src.model.merges) {
+    dst.mergeCells(range);
+  }
+
+  dst.views = clone(src.views);
 }
 
 export async function processCheckingCom({
@@ -212,28 +306,32 @@ export async function processCheckingCom({
     }
   }
 
+  const source = new ExcelJS.Workbook();
+  await source.xlsx.load(fileBytes);
+
+  if (source.worksheets.length === 0) throw new Error("Workbook has no worksheets.");
+
+  const srcSheet = source.worksheets[0];
+
+  // Clean output: build a brand-new workbook and copy only values + whitelisted
+  // formatting. Conditional formatting, data validations, comments, defined
+  // names, tables and autoFilters from the upload are intentionally dropped.
   const wb = new ExcelJS.Workbook();
-  await wb.xlsx.load(fileBytes);
+  const wsData = wb.addWorksheet(srcSheet.name);
+  copySheet(srcSheet, wsData);
 
-  if (wb.worksheets.length === 0) throw new Error("Workbook has no worksheets.");
+  // Autofilter spanning all header columns (last non-empty cell in row 1)
+  const lastCol = getLastCol(wsData);
+  if (lastCol > 0) {
+    wsData.autoFilter = `A1:${colLetter(lastCol)}1`;
+  }
 
-  const wsData = wb.worksheets[0];
-
-  // Hide/unhide columns
+  // Hide/unhide columns (hide first, then explicitly reveal BF:BG)
   for (const [from, to] of HIDE_RANGES) {
     for (let c = from; c <= to; c++) wsData.getColumn(c).hidden = true;
   }
   for (const [from, to] of UNHIDE_RANGES) {
     for (let c = from; c <= to; c++) wsData.getColumn(c).hidden = false;
-  }
-
-  // Autofilter spanning all header columns (last non-empty cell in row 1)
-  const lastCol = getLastCol(wsData);
-  if (lastCol > 0) {
-    wsData.autoFilter = {
-      from: { row: 1, column: 1 },
-      to: { row: 1, column: lastCol },
-    };
   }
 
   // Build summary "pivot" sheets.
@@ -303,30 +401,31 @@ export async function processCheckingCom({
   }
 
   // Fix tab order: Data = 1, summary sheets follow in declared order.
-  wsData.orderNo = 1;
+  (wsData as OrderedWorksheet).orderNo = 1;
   for (const b of blocks) {
     const sheet = wb.getWorksheet(b.name);
-    if (sheet) sheet.orderNo = b.order;
+    if (sheet) (sheet as OrderedWorksheet).orderNo = b.order;
   }
 
-  // Model group separators — thick bottom border where consecutive Model values differ
+  // Model group separators — thick bottom border where consecutive Model values
+  // differ, plus the last data row. Styles are cloned per cell because ExcelJS
+  // shares style objects between cells.
   const modelCol = findHeader(wsData, "model");
   if (modelCol !== -1) {
     const lastRow = getLastRow(wsData);
     const lastColInSheet = getLastCol(wsData);
-    for (let r = 2; r < lastRow; r++) {
-      const cur = cellText(wsData.getCell(r, modelCol).value);
-      const nxt = cellText(wsData.getCell(r + 1, modelCol).value);
-      if (cur !== nxt) {
-        for (let c = 1; c <= lastColInSheet; c++) {
-          const cell = wsData.getCell(r, c);
-          cell.border = { ...(cell.border || {}), bottom: { style: "thick" } };
-        }
+    for (let r = 2; r <= lastRow; r++) {
+      if (r < lastRow) {
+        const cur = cellText(wsData.getCell(r, modelCol).value);
+        const nxt = cellText(wsData.getCell(r + 1, modelCol).value);
+        if (cur === nxt) continue;
       }
-    }
-    for (let c = 1; c <= lastColInSheet; c++) {
-      const cell = wsData.getCell(lastRow, c);
-      cell.border = { ...(cell.border || {}), bottom: { style: "thick" } };
+      for (let c = 1; c <= lastColInSheet; c++) {
+        const cell = wsData.getCell(r, c);
+        const s = clone(cell.style);
+        s.border = { ...(s.border || {}), bottom: { style: "thick" } };
+        cell.style = s;
+      }
     }
   }
 
