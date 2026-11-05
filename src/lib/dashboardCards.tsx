@@ -91,8 +91,8 @@ export const dashboardCards: DashboardCard[] = [
     title: "DAT TOOL",
     description: "To search Residual Values and Guaranteed Future Values.",
     Icon: DatToolIcon,
-    actionType: "external_link",
-    href: "https://www.datgroup.com/es-es/my-dat/dashboard/",
+    actionType: "internal_route",
+    href: "/dat-tool",
     newTab: true,
   },
   {
