@@ -7,54 +7,56 @@
  */
 export interface CarWeb {
   id: string;
-  /** Country (or area) the website belongs to. */
+  /** Short country (or area) code, e.g. "TUN" or "BE". */
   country: string;
   /** Website name shown in the "Website" column. */
   name: string;
-  /** Complete URL, shown as text so it can also be copied and pasted. */
+  /** Complete URL the website name links to. */
   url: string;
+  /** URL shown in the copy/paste column when it differs from the link target. */
+  displayUrl?: string;
 }
 
 export const OVERSEAS_CAR_WEBS: CarWeb[] = [
   {
     id: "tn-automobile",
-    country: "Tunisia",
+    country: "TUN",
     name: "Automobile",
     url: "https://www.automobile.tn/fr",
   },
   {
     id: "tn-sifir-fiyatlar",
-    country: "Tunisia",
+    country: "TUN",
     name: "Sifir Fiyatlar",
     url: "https://www.sifirfiyatlar.com/en",
   },
   {
     id: "dz-autobip",
-    country: "Algeria",
+    country: "ALG",
     name: "Autobip",
     url: "https://www.autobip.com/fr/",
   },
   {
     id: "eg-contactcars",
-    country: "Egypt",
+    country: "EGY",
     name: "Contactcars",
     url: "https://www.contactcars.com/en",
   },
   {
     id: "eg-yallamotor",
-    country: "Egypt",
+    country: "EGY",
     name: "YallaMotor",
     url: "https://egypt.yallamotor.com/",
   },
   {
     id: "ma-wandaloo",
-    country: "Morocco",
+    country: "MOR",
     name: "Wandaloo",
     url: "https://www.wandaloo.com/",
   },
   {
     id: "ci-koto",
-    country: "Côte d'Ivoire",
+    country: "CIV",
     name: "Koto",
     url: "https://koto.ci/",
   },
@@ -78,7 +80,7 @@ export const OVERSEAS_CAR_WEBS: CarWeb[] = [
   },
   {
     id: "sa-ae-autopediame",
-    country: "KSA y UAE",
+    country: "KSA/UAE",
     name: "Autopediame",
     url: "https://www.autopediame.com/uae/en",
   },
@@ -104,10 +106,18 @@ export const OVERSEAS_CAR_WEBS: CarWeb[] = [
 
 export const EUROPE_CAR_WEBS: CarWeb[] = [
   {
-    id: "be-moniteur-automobile",
-    country: "Belgium",
-    name: "Moniteur Automobile",
+    id: "be-moniteur-auto",
+    country: "BE",
+    name: "Moniteur Auto",
     url: "https://www.moniteurautomobile.be/marques-auto/toutes-marques-automobiles.html",
+    displayUrl: "https://www.moniteurautomobile.be/accueil.html",
+  },
+  {
+    id: "be-moniteur-vans",
+    country: "BE",
+    name: "Moniteur Vans",
+    url: "https://www.moniteurautomobile.be/marques-utilitaires/toutes-marques-automobiles.html",
+    displayUrl: "https://www.moniteurautomobile.be/accueil.html",
   },
   {
     id: "es-km77",

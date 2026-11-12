@@ -50,34 +50,38 @@ function CarWebsTable({ id, title, links }: { id: string; title: string; links: 
           </tr>
         </thead>
         <tbody>
-          {links.map((item) => (
-            <tr key={item.id} className="align-top">
-              <td className="whitespace-nowrap py-2.5 pr-4 align-top text-xs font-semibold text-foreground">
-                {item.country}
-              </td>
-              <td className="py-2.5 pr-4 align-top">
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => trackEvent("car_web_clicked", { id: item.id, url: item.url })}
-                  className="break-words underline decoration-1 underline-offset-2 hover:no-underline"
-                  style={{ color: "var(--accent-blue)" }}
-                >
-                  {item.name}
-                </a>
-              </td>
-              <td className="py-2.5 align-top">
-                <span
-                  className="block break-all font-mono text-[11px] leading-snug select-all"
-                  style={{ color: "#2C3243" }}
-                  title={item.url}
-                >
-                  {item.url}
-                </span>
-              </td>
-            </tr>
-          ))}
+          {links.map((item) => {
+            const shownUrl = item.displayUrl ?? item.url;
+
+            return (
+              <tr key={item.id} className="align-top">
+                <td className="whitespace-nowrap py-2.5 pr-4 align-top text-xs font-semibold text-foreground">
+                  {item.country}
+                </td>
+                <td className="py-2.5 pr-4 align-top">
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent("car_web_clicked", { id: item.id, url: item.url })}
+                    className="break-words underline decoration-1 underline-offset-2 hover:no-underline"
+                    style={{ color: "var(--accent-blue)" }}
+                  >
+                    {item.name}
+                  </a>
+                </td>
+                <td className="py-2.5 align-top">
+                  <span
+                    className="block break-all font-mono text-[11px] leading-snug select-all"
+                    style={{ color: "#2C3243" }}
+                    title={shownUrl}
+                  >
+                    {shownUrl}
+                  </span>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </section>
