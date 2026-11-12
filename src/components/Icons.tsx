@@ -82,23 +82,30 @@ export function MacroToLocationIcon(props: IconProps) {
 }
 
 /**
- * FROM PRICER TO MATRIX — a flashlight (spotlight on prices) on the left, arrow,
+ * FROM PRICER TO MATRIX — the pricer/flashlight glyph on the left, arrow,
  * then the same Excel booklet with a blue X used by MATRIX TO LOCATION (matrix = X).
+ *
+ * The glyph is traced from the reference artwork and lives in its own 158×133
+ * coordinate system, scaled into place. It tilts up-right so its axis follows
+ * the arrow, and the three eyelets (tail, joint, head) are kept.
  */
 export function PricerIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>
-      {/* Flashlight, tilted so it "points" up-right toward the matrix */}
-      <g transform="rotate(-38 16 34)">
-        {/* Head / lens barrel */}
-        <path d="M10.5 21.5 L21.5 21.5 L20 30 L12 30 Z" fill="#FFFFFF" />
-        <line x1="11.8" y1="24.2" x2="20.2" y2="24.2" />
-        {/* Body */}
-        <rect x="12" y="30" width="8" height="15" rx="1.5" fill="#FFFFFF" />
-        {/* Tail cap seam */}
-        <line x1="12" y1="41.5" x2="20" y2="41.5" />
-        {/* Switch */}
-        <circle cx="16" cy="34" r="1.6" />
+      {/* Pricer glyph, tilted up-right toward the arrow */}
+      <g transform="translate(2 24.4) scale(0.176)" strokeWidth={7}>
+        {/* Upper edge of the body, flowing into the head */}
+        <path d="M 122 3 C 114 10 104 15 100 24 C 97 31 96 33 91 39 C 73 52 47 70 30 80" />
+        {/* Tail eyelet */}
+        <circle cx="20" cy="86" r="5.6" strokeWidth={5.5} />
+        {/* Rounded tail and lower edge of the body */}
+        <path d="M 15 93 C 6 99 1 105 1 111 C 1 120 9 128 18 131 C 26 133 31 130 36 125 L 87 88" />
+        {/* Joint eyelet */}
+        <circle cx="101" cy="82" r="5.6" strokeWidth={5.5} />
+        {/* Head: bar, outer bulge and neck up to the lens eyelet */}
+        <path d="M 105 76 C 108 73 110 72 114 69 C 119 67 126 66 133 67 C 142 68 148 63 153 57 C 157 52 159 47 157 42 C 155 35 148 28 141 22 C 138 19 136 18 135 17" />
+        {/* Lens eyelet */}
+        <circle cx="136" cy="12" r="5.6" strokeWidth={5.5} />
       </g>
 
       {/* Blue right-pointing arrow, centred like the MATRIX TO LOCATION one */}
