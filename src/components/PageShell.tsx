@@ -8,16 +8,18 @@ export function PageShell({
   subtitle,
   children,
   showBack = true,
+  wide = false,
 }: {
   title: string;
   subtitle?: string;
   children: ReactNode;
   showBack?: boolean;
+  wide?: boolean;
 }) {
   return (
     <div className="min-h-screen">
       <Header />
-      <main className="max-w-5xl mx-auto px-6 md:px-10 py-10">
+      <main className={`${wide ? "max-w-7xl" : "max-w-5xl"} mx-auto px-6 md:px-10 py-10`}>
         {showBack && (
           <Link
             to="/"
