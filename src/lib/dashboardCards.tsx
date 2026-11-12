@@ -67,7 +67,7 @@ export const dashboardCards: DashboardCard[] = [
   },
   {
     id: "from-pricer-to-matrix",
-    title: "FROM PRICER TO MATRIX",
+    title: "PRICER TO MATRIX",
     description: "Match PRICER with Matrix versions and get new MSRPs.",
     Icon: PricerIcon,
     actionType: "external_link",

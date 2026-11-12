@@ -82,7 +82,7 @@ export function MacroToLocationIcon(props: IconProps) {
 }
 
 /**
- * FROM PRICER TO MATRIX — the pricer/flashlight glyph on the left, arrow,
+ * PRICER TO MATRIX — the pricer/flashlight glyph on the left, arrow,
  * then the same Excel booklet with a blue X used by MATRIX TO LOCATION (matrix = X).
  *
  * The glyph is traced from the reference artwork and lives in its own 158×133
