@@ -4,6 +4,9 @@
  * The page renders these two lists side by side: OVERSEAS on the left and
  * EUROPE on the right. Each entry keeps the country, the display name of the
  * site and the full URL so it can be opened in a new tab or copied as-is.
+ *
+ * Both lists are kept sorted by country code (A–Z). Entries sharing a country
+ * keep their original relative order.
  */
 export interface CarWeb {
   id: string;
@@ -19,22 +22,16 @@ export interface CarWeb {
 
 export const OVERSEAS_CAR_WEBS: CarWeb[] = [
   {
-    id: "tn-automobile",
-    country: "TUN",
-    name: "Automobile",
-    url: "https://www.automobile.tn/fr",
-  },
-  {
-    id: "tn-sifir-fiyatlar",
-    country: "TUN",
-    name: "Sifir Fiyatlar",
-    url: "https://www.sifirfiyatlar.com/en",
-  },
-  {
     id: "dz-autobip",
     country: "ALG",
     name: "Autobip",
     url: "https://www.autobip.com/fr/",
+  },
+  {
+    id: "ci-koto",
+    country: "CIV",
+    name: "Koto",
+    url: "https://koto.ci/",
   },
   {
     id: "eg-contactcars",
@@ -49,16 +46,16 @@ export const OVERSEAS_CAR_WEBS: CarWeb[] = [
     url: "https://egypt.yallamotor.com/",
   },
   {
-    id: "ma-wandaloo",
-    country: "MOR",
-    name: "Wandaloo",
-    url: "https://www.wandaloo.com/",
+    id: "sa-motory",
+    country: "KSA",
+    name: "Motory",
+    url: "https://ksa.motory.com/en/",
   },
   {
-    id: "ci-koto",
-    country: "CIV",
-    name: "Koto",
-    url: "https://koto.ci/",
+    id: "sa-yallamotor",
+    country: "KSA",
+    name: "YallaMotor",
+    url: "https://ksa.yallamotor.com/",
   },
   {
     id: "mea-drivearabia",
@@ -73,34 +70,40 @@ export const OVERSEAS_CAR_WEBS: CarWeb[] = [
     url: "https://www.ccarprice.com/",
   },
   {
-    id: "sa-motory",
-    country: "KSA",
-    name: "Motory",
-    url: "https://ksa.motory.com/en/",
-  },
-  {
-    id: "sa-ae-autopediame",
-    country: "KSA/UAE",
-    name: "Autopediame",
-    url: "https://www.autopediame.com/uae/en",
-  },
-  {
-    id: "sa-yallamotor",
-    country: "KSA",
-    name: "YallaMotor",
-    url: "https://ksa.yallamotor.com/",
-  },
-  {
-    id: "ae-yallamotor",
-    country: "UAE",
-    name: "YallaMotor",
-    url: "https://uae.yallamotor.com/",
+    id: "ma-wandaloo",
+    country: "MOR",
+    name: "Wandaloo",
+    url: "https://www.wandaloo.com/",
   },
   {
     id: "saf-cars-co-za",
     country: "SAF",
     name: "Cars.co.za",
     url: "https://www.cars.co.za/",
+  },
+  {
+    id: "tn-automobile",
+    country: "TUN",
+    name: "Automobile",
+    url: "https://www.automobile.tn/fr",
+  },
+  {
+    id: "tn-sifir-fiyatlar",
+    country: "TUN",
+    name: "Sifir Fiyatlar",
+    url: "https://www.sifirfiyatlar.com/en",
+  },
+  {
+    id: "sa-ae-autopediame",
+    country: "UAE",
+    name: "Autopediame",
+    url: "https://www.autopediame.com/uae/en",
+  },
+  {
+    id: "ae-yallamotor",
+    country: "UAE",
+    name: "YallaMotor",
+    url: "https://uae.yallamotor.com/",
   },
 ];
 
@@ -120,6 +123,12 @@ export const EUROPE_CAR_WEBS: CarWeb[] = [
     displayUrl: "https://www.moniteurautomobile.be/accueil.html",
   },
   {
+    id: "de-autobild",
+    country: "DE",
+    name: "Autobild",
+    url: "https://www.autobild.de/",
+  },
+  {
     id: "es-km77",
     country: "ES",
     name: "KM77",
@@ -136,6 +145,12 @@ export const EUROPE_CAR_WEBS: CarWeb[] = [
     country: "EU",
     name: "Autrotras",
     url: "https://autotras.com/",
+  },
+  {
+    id: "fr-largus",
+    country: "FR",
+    name: "Argus",
+    url: "https://www.largus.fr/",
   },
   {
     id: "it-automoto",
@@ -160,18 +175,6 @@ export const EUROPE_CAR_WEBS: CarWeb[] = [
     country: "IT",
     name: "Quattroroute",
     url: "https://www.quattroruote.it/",
-  },
-  {
-    id: "fr-largus",
-    country: "FR",
-    name: "Argus",
-    url: "https://www.largus.fr/",
-  },
-  {
-    id: "de-autobild",
-    country: "DE",
-    name: "Autobild",
-    url: "https://www.autobild.de/",
   },
   {
     id: "uk-carvertical",
