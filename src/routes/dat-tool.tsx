@@ -257,14 +257,14 @@ function DatTool() {
         </Step>
 
         <Step number={5} title="Press “Continue” 3 times">
-          The orange button at the bottom-right <span className="whitespace-nowrap">➡️</span> press
+          The orange button at the bottom-right <span className="whitespace-nowrap"> ⇨ </span> press
           it 3 times.
         </Step>
 
         <Step number={6} title="Get the RV estimate">
           You will arrive at{" "}
           <strong className="text-foreground">
-            “&gt;&gt; New vehicle residual value prediction”
+            “&gt;&gt; ✥⌃ New vehicle residual value prediction”
           </strong>
           . Stop there. It should be:
           <Bullets>
@@ -281,7 +281,7 @@ function DatTool() {
               Mileage: <strong className="text-foreground">Per year</strong>
             </Bullet>
             <Bullet>
-              Representation: <strong className="text-foreground">in % (ne)</strong>
+              Representation: <strong className="text-foreground">in % (net)</strong>
             </Bullet>
           </Bullets>
           <p className="mt-3">
