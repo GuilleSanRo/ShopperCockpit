@@ -81,15 +81,51 @@ export function MacroToLocationIcon(props: IconProps) {
   );
 }
 
+/**
+ * FROM PRICER TO MATRIX — a flashlight (spotlight on prices) on the left, arrow,
+ * then the same Excel booklet with a blue X used by MATRIX TO LOCATION (matrix = X).
+ */
 export function PricerIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>
-      <circle cx="36" cy="36" r="18" />
-      <circle cx="36" cy="36" r="4" fill={BLUE} stroke={BLUE} />
-      <line x1="36" y1="18" x2="36" y2="54" />
-      <line x1="18" y1="36" x2="54" y2="36" />
-      <line x1="24" y1="24" x2="48" y2="48" />
-      <line x1="48" y1="24" x2="24" y2="48" />
+      {/* Flashlight, tilted so it "points" up-right toward the matrix */}
+      <g transform="rotate(-38 16 34)">
+        {/* Head / lens barrel */}
+        <path d="M10.5 21.5 L21.5 21.5 L20 30 L12 30 Z" fill="#FFFFFF" />
+        <line x1="11.8" y1="24.2" x2="20.2" y2="24.2" />
+        {/* Body */}
+        <rect x="12" y="30" width="8" height="15" rx="1.5" fill="#FFFFFF" />
+        {/* Tail cap seam */}
+        <line x1="12" y1="41.5" x2="20" y2="41.5" />
+        {/* Switch */}
+        <circle cx="16" cy="34" r="1.6" />
+      </g>
+
+      {/* Blue right-pointing arrow, centred like the MATRIX TO LOCATION one */}
+      <path
+        d="M31 36 L39 36 M36 33 L39 36 L36 39"
+        stroke={BLUE}
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      {/* Back document sheet of the matrix booklet */}
+      <path d="M57 23 L63 23 C64.1 23 65 23.9 65 25 L65 47 C65 48.1 64.1 49 63 49 L57 49" />
+      <line x1="59.5" y1="30" x2="62.5" y2="30" />
+      <line x1="59.5" y1="36" x2="62.5" y2="36" />
+      <line x1="59.5" y1="42" x2="62.5" y2="42" />
+
+      {/* Front Excel booklet tile with perspective */}
+      <polygon points="45,24 57,21 57,51 45,48" fill="#FFFFFF" />
+
+      {/* Blue X mark on the matrix tile */}
+      <path
+        d="M48.5 32 L53.5 40 M53.5 32 L48.5 40"
+        stroke={BLUE}
+        strokeWidth="1.75"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
