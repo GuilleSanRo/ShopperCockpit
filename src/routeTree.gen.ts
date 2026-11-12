@@ -15,6 +15,7 @@ import { Route as OldLinksRouteImport } from './routes/old-links'
 import { Route as MacroToLocationRouteImport } from './routes/macro-to-location'
 import { Route as CheckingComRouteImport } from './routes/checking-com'
 import { Route as DatToolRouteImport } from './routes/dat-tool'
+import { Route as CarWebsRouteImport } from './routes/car-webs'
 import { Route as IndexRouteImport } from './routes/index'
 
 const GlossaryRoute = GlossaryRouteImport.update({
@@ -47,6 +48,11 @@ const DatToolRoute = DatToolRouteImport.update({
   path: '/dat-tool',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CarWebsRoute = CarWebsRouteImport.update({
+  id: '/car-webs',
+  path: '/car-webs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,6 +61,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/car-webs': typeof CarWebsRoute
   '/checking-com': typeof CheckingComRoute
   '/dat-tool': typeof DatToolRoute
   '/macro-to-location': typeof MacroToLocationRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/car-webs': typeof CarWebsRoute
   '/checking-com': typeof CheckingComRoute
   '/dat-tool': typeof DatToolRoute
   '/macro-to-location': typeof MacroToLocationRoute
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/car-webs': typeof CarWebsRoute
   '/checking-com': typeof CheckingComRoute
   '/dat-tool': typeof DatToolRoute
   '/macro-to-location': typeof MacroToLocationRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/car-webs'
     | '/checking-com'
     | '/dat-tool'
     | '/macro-to-location'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/car-webs'
     | '/checking-com'
     | '/dat-tool'
     | '/macro-to-location'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/car-webs'
     | '/checking-com'
     | '/dat-tool'
     | '/macro-to-location'
@@ -113,6 +125,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CarWebsRoute: typeof CarWebsRoute
   CheckingComRoute: typeof CheckingComRoute
   DatToolRoute: typeof DatToolRoute
   MacroToLocationRoute: typeof MacroToLocationRoute
@@ -165,6 +178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DatToolRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/car-webs': {
+      id: '/car-webs'
+      path: '/car-webs'
+      fullPath: '/car-webs'
+      preLoaderRoute: typeof CarWebsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -177,6 +197,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CarWebsRoute: CarWebsRoute,
   CheckingComRoute: CheckingComRoute,
   DatToolRoute: DatToolRoute,
   MacroToLocationRoute: MacroToLocationRoute,

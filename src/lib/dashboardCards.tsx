@@ -12,7 +12,7 @@ import {
 } from "@/components/Icons";
 
 /** Pages that live inside this app and can be reached without leaving the site. */
-export type InternalRoute = "/macro-to-location" | "/checking-com" | "/dat-tool";
+export type InternalRoute = "/macro-to-location" | "/checking-com" | "/dat-tool" | "/car-webs";
 
 interface DashboardCardBase {
   id: string;
@@ -116,8 +116,9 @@ export const dashboardCards: DashboardCard[] = [
     title: "CAR WEBS",
     description: "Links to consult information of vehicles in internet.",
     Icon: CarWebsIcon,
-    actionType: "none",
-    href: "",
-    newTab: false,
+    // Opens our own CAR WEBS page in the same tab, like DAT TOOL.
+    actionType: "internal_route",
+    href: "/car-webs",
+    newTab: true,
   },
 ];
