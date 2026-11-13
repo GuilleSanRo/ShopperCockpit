@@ -145,10 +145,10 @@ function DatTool() {
   return (
     <PageShell
       title="DAT TOOL"
-      subtitle="Residual Values (RVs) and Guaranteed Future Values (GFVs) from DAT Tool:"
+      subtitle="Get Residual Values (RVs) and Guaranteed Future Values (GFVs)"
     >
       <p className="mb-7 text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-        Below is a guide to accessing DAT and using it to extract or estimate Residual Values (RV):
+        From DAT Tool website, step-by-step:
       </p>
 
       <ol className="m-0 list-none p-0">
@@ -264,7 +264,7 @@ function DatTool() {
         <Step number={6} title="Get the RV estimate">
           You will arrive at{" "}
           <strong className="text-foreground">
-            “&gt;&gt; ✥⌃ New vehicle residual value prediction”
+            “&gt;&gt; ✥New vehicle residual value prediction”
           </strong>
           . Stop there. It should be:
           <Bullets>
@@ -290,7 +290,7 @@ function DatTool() {
           <Bullets nested>
             <Bullet>
               Example: <strong className="text-foreground">20,000 km</strong> and{" "}
-              <strong className="text-foreground">66 months</strong> → it gives{" "}
+              <strong className="text-foreground">36 months</strong> → it gives{" "}
               <strong className="text-foreground">XX</strong> as RV.
             </Bullet>
           </Bullets>
