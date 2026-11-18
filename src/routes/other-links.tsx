@@ -76,6 +76,24 @@ export const OTHER_LINKS: LinkItem[] = [
     createdAt: "2026-10-08",
     updatedAt: "2026-10-08",
   },
+{
+    id: "8",
+    order: 8,
+    title: "The Source Kantar",
+    url: "https://thesource.kantar.com/",
+    notes: "The Source Kantar (lo del calendario laboral, etc.)",
+    createdAt: "2026-11-18",
+    updatedAt: "2026-11-18",
+  },
+{
+    id: "9",
+    order: 9,
+    title: "Prevencion de Riesgos Laborales",
+    url: "https://thesource.kantar.com/sites/human-resources/SitePageModern/349763/med-europe-hr-support-spain-health-and-safety",
+    notes: "Prevencion de RRLL y evacuación de Kantar (La Matriz)",
+    createdAt: "2026-11-18",
+    updatedAt: "2026-11-18",
+  },
 ];
 
 export const Route = createFileRoute("/other-links")({
