@@ -63,7 +63,7 @@ export const OTHER_LINKS: LinkItem[] = [
     order: 6,
     title: "Model List",
     url: "https://ktglbuc.sharepoint.com/:x:/r/sites/cdp-promocar/spain/promocar/_layouts/15/Doc.aspx?sourcedoc=%7B2AAF4C4D-2F0A-4C0C-92DB-22119B698CBF%7D&file=Models%20List%20(Codes).xlsx&action=default&mobileredirect=true",
-    notes: "List with promoCAR models, make (brand), segment, code, etc.",
+    notes: "List with promoCAR models, make, segment, code, etc.",
     createdAt: "2026-10-08",
     updatedAt: "2026-10-08",
   },
@@ -88,7 +88,7 @@ export const OTHER_LINKS: LinkItem[] = [
 {
     id: "9",
     order: 9,
-    title: "Prevencion de Riesgos Laborales",
+    title: "Prevencion Riesgos Laborales",
     url: "https://thesource.kantar.com/sites/human-resources/SitePageModern/349763/med-europe-hr-support-spain-health-and-safety",
     notes: "Prevencion de RRLL y evacuación de Kantar (La Matriz)",
     createdAt: "2026-11-18",
